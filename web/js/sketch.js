@@ -356,7 +356,7 @@ window.tinyMlExperimentBleInterface.createConnectButton(
       console.log(`Loaded ${Math.round(progress * 100)}%)`);
       var bar = document.getElementById("myBar");
       document.getElementById("myProgress").style.visibility = "visible";
-      bar.style.width = Math.round(progress * 100) + "%";
+      // bar.style.width = Math.round(progress * 100) + "%";
       document.getElementById("myBar").innerHTML = `${Math.round(
         progress * 100
       )}%`;

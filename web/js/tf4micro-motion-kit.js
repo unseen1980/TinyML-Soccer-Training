@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   /* Copyright 2021 Google LLC
 
@@ -25,12 +25,12 @@
       });
     }
 
-    _checkEvent(eventName){
+    _checkEvent(eventName) {
       if (!this.eventListeners[eventName]) {
         throw new Error(
           `No event named ${eventName}. Availible events are ${Object.keys(
-          this.eventListeners
-        ).join(', ')}`
+            this.eventListeners
+          ).join(", ")}`
         );
       }
     }
@@ -38,9 +38,9 @@
     addEventListener(eventName, callback) {
       this._checkEvent(eventName);
       this.eventListeners[eventName].push(callback);
-      return ()=>{
+      return () => {
         this.removeEventListener(eventName, callback);
-      }
+      };
     }
 
     removeEventListener(eventName, callback) {
@@ -50,8 +50,8 @@
       );
     }
 
-    once(eventName, callback){
-      const unsub = this.addEventListener(eventName, (...args)=>{
+    once(eventName, callback) {
+      const unsub = this.addEventListener(eventName, (...args) => {
         callback(...args);
         unsub();
       });
@@ -60,16 +60,20 @@
     dispatchEvent(eventName, data) {
       this._checkEvent(eventName);
       this.eventListeners[eventName].forEach((cb) => cb(data));
-      this.propagation.forEach(listener=>listener.dispatchEvent(eventName, data));
+      this.propagation.forEach((listener) =>
+        listener.dispatchEvent(eventName, data)
+      );
     }
 
-    addEventName(name){
+    addEventName(name) {
       this.eventListeners[name] = this.eventListeners[name] || [];
     }
-    
-    propagateTo(eventHandler){
+
+    propagateTo(eventHandler) {
       this.propagation.push(eventHandler);
-      Object.keys(this.eventListeners).forEach((name)=>eventHandler.addEventName(name));
+      Object.keys(this.eventListeners).forEach((name) =>
+        eventHandler.addEventName(name)
+      );
     }
   }
 
@@ -96,7 +100,12 @@
   let transferStatusCharacteristic = null;
   let errorMessageCharacteristic = null;
 
-  const eventHandler$2 = new EventHandler('error','progress','begin','completed');
+  const eventHandler$2 = new EventHandler(
+    "error",
+    "progress",
+    "begin",
+    "completed"
+  );
 
   let isFileTransferInProgress = false;
   const FILE_BLOCK_UUID = "bf88b656-3000-4a61-86e0-769c741026c0";
@@ -127,14 +136,14 @@
     let checksumArray = new Uint32Array(checksumValue.buffer);
     let checksum = checksumArray[0];
     msg("File transfer succeeded: Checksum 0x" + checksum.toString(16));
-    eventHandler$2.dispatchEvent('completed');
+    eventHandler$2.dispatchEvent("completed");
   }
 
   // Called when something has gone wrong with a file transfer.
   function onTransferError() {
     isFileTransferInProgress = false;
     msg("File transfer error");
-    eventHandler$2.dispatchEvent('error', new Error('File transfer failed'));
+    eventHandler$2.dispatchEvent("error", new Error("File transfer failed"));
   }
 
   // Called when an error message is received from the device. This describes what
@@ -151,10 +160,11 @@
   // shouldn't need to modify but will have to call.
 
   async function setupService(service) {
-
     msg("Getting characteristics ...");
     fileBlockCharacteristic = await service.getCharacteristic(FILE_BLOCK_UUID);
-    fileLengthCharacteristic = await service.getCharacteristic(FILE_LENGTH_UUID);
+    fileLengthCharacteristic = await service.getCharacteristic(
+      FILE_LENGTH_UUID
+    );
     fileMaximumLengthCharacteristic = await service.getCharacteristic(
       FILE_MAXIMUM_LENGTH_UUID
     );
@@ -203,7 +213,7 @@
     }
 
     msg("Transfering file");
-    console.log(fileContents);  
+    console.log(fileContents);
     let fileLengthArray = Int32Array.of(fileContents.byteLength);
     await fileLengthCharacteristic.writeValue(fileLengthArray);
     let fileChecksum = crc32(fileContents);
@@ -214,7 +224,6 @@
     await commandCharacteristic.writeValue(commandArray);
 
     return sendFileBlock(fileContents, 0);
-
   }
 
   async function cancelTransfer() {
@@ -295,7 +304,10 @@
         if (bytesRemaining > 0 && isFileTransferInProgress) {
           msg("File block written - " + bytesRemaining + " bytes remaining");
           bytesAlreadySent += blockLength;
-          eventHandler$2.dispatchEvent('progress', bytesAlreadySent / fileContents.byteLength);
+          eventHandler$2.dispatchEvent(
+            "progress",
+            bytesAlreadySent / fileContents.byteLength
+          );
           return sendFileBlock(fileContents, bytesAlreadySent);
         }
       })
@@ -313,8 +325,12 @@
     setupService,
     transferFile: transferFile$1,
     cancelTransfer,
-    addEventListener(...args){ eventHandler$2.addEventListener(...args); },
-    removeEventListener(...args){ eventHandler$2.removeEventListener(...args); },
+    addEventListener(...args) {
+      eventHandler$2.addEventListener(...args);
+    },
+    removeEventListener(...args) {
+      eventHandler$2.removeEventListener(...args);
+    },
     dummTransfer() {
       msg("Trying to write dummy file ...");
       let fileContents = prepareDummyFileContents(30 * 1024);
@@ -352,29 +368,28 @@
    * BLE UUIDS
    *******************************************************************/
 
-
   function UUID_GEN(val) {
     return "81c30e5c-" + val + "-4f7d-a886-de3e90749161";
   }
 
-  const SERVICE_UUID              = UUID_GEN("0000");
+  const SERVICE_UUID = UUID_GEN("0000");
 
-  const IMU_DATA_RX_UUID          = UUID_GEN("1001");
-  const INFERENCE_RX_UUID         = UUID_GEN("1004");
+  const IMU_DATA_RX_UUID = UUID_GEN("1001");
+  const INFERENCE_RX_UUID = UUID_GEN("1004");
 
-  const NUM_CLASSES_UUID          = UUID_GEN("2001");
-  const NUM_SAMPLES_UUID          = UUID_GEN("2002");
-  const CAPTURE_DELAY_UUID        = UUID_GEN("2003");
-  const THRESHOLD_UUID            = UUID_GEN("2004");
+  const NUM_CLASSES_UUID = UUID_GEN("2001");
+  const NUM_SAMPLES_UUID = UUID_GEN("2002");
+  const CAPTURE_DELAY_UUID = UUID_GEN("2003");
+  const THRESHOLD_UUID = UUID_GEN("2004");
   const DISABLE_MAGNETOMETER_UUID = UUID_GEN("2005");
 
-  const STATE_TX_UUID             = UUID_GEN("3001");
-  const STATE_RX_UUID             = UUID_GEN("3002");
-  const FILE_TYPE_TX_UUID         = UUID_GEN("3003");
-  const HAS_MODEL_RX_UUID         = UUID_GEN("3004");
+  const STATE_TX_UUID = UUID_GEN("3001");
+  const STATE_RX_UUID = UUID_GEN("3002");
+  const FILE_TYPE_TX_UUID = UUID_GEN("3003");
+  const HAS_MODEL_RX_UUID = UUID_GEN("3004");
 
-  const META_TX_UUID              = UUID_GEN("4001");
-  const META_RX_UUID              = UUID_GEN("4002");
+  const META_TX_UUID = UUID_GEN("4001");
+  const META_RX_UUID = UUID_GEN("4002");
 
   /********************************************************************
    * States / Types - Matches Arduino ENUM
@@ -388,12 +403,12 @@
     IMU_DATA_PROVIDER: 4, // Send IMU data over BLE for IMU Trainer
     ERROR_STATE: 5, // Something went wrong
     CALIBRATION: 6,
-    INFERENCE_AND_DATA_PROVIDER: 7
+    INFERENCE_AND_DATA_PROVIDER: 7,
   };
 
   const FILE_TYPES = {
     MODEL_FILE: 0,
-    TEST_FILE: 1
+    TEST_FILE: 1,
   };
 
   /********************************************************************
@@ -448,19 +463,19 @@
     });
   }
 
-  async function updateHasModel(){
+  async function updateHasModel() {
     const reader = await hasModelRxChar.readValue();
     const v = await reader.getUint8();
     hasModel = v;
-    eventHandler$1.dispatchEvent('has-model', hasModel);
+    eventHandler$1.dispatchEvent("has-model", hasModel);
   }
 
-  function handleHasModelChange(event){
+  function handleHasModelChange(event) {
     const value = event.target.value;
     const v = new Uint8Array(value.buffer)[0];
     console.log(v);
     hasModel = v;
-    eventHandler$1.dispatchEvent('has-model', hasModel);
+    eventHandler$1.dispatchEvent("has-model", hasModel);
   }
 
   function handleIMUDataChange(event) {
@@ -492,15 +507,18 @@
     bleFileTransfer.setupService(service);
   }
 
-  function handleStateChange(e){
+  function handleStateChange(e) {
     const reader = e.target.value;
     const byte = new Uint8Array(reader.buffer)[0];
-    const state = Object.keys(STATES).find(k=>STATES[k]===byte);
-    if(state === STATES.ERROR_STATE){
-      eventHandler$1.dispatchEvent('error',new Error('Arduion is in error state'));
+    const state = Object.keys(STATES).find((k) => STATES[k] === byte);
+    if (state === STATES.ERROR_STATE) {
+      eventHandler$1.dispatchEvent(
+        "error",
+        new Error("Arduion is in error state")
+      );
     }
-    console.log('state cahnge');
-    eventHandler$1.dispatchEvent('state-change', state);
+    console.log("state cahnge");
+    eventHandler$1.dispatchEvent("state-change", state);
   }
 
   bleFileTransfer.addEventListener("progress", (p) => {
@@ -517,22 +535,25 @@
 
   const bleManagerApi = {
     async connect() {
-    
       await connect$1();
-      console.log('SETUP CONNECT!');  
-      numClassesTxChar        = await service.getCharacteristic(NUM_CLASSES_UUID);
-      numSamplesTxChar        = await service.getCharacteristic(NUM_SAMPLES_UUID);
-      captureDelayTxChar      = await service.getCharacteristic(CAPTURE_DELAY_UUID);
-      thresholdTxChar         = await service.getCharacteristic(THRESHOLD_UUID);
-      stateTxChar             = await service.getCharacteristic(STATE_TX_UUID);
-      inferenceRxChar         = await service.getCharacteristic(INFERENCE_RX_UUID);
-      imuDataRxChar           = await service.getCharacteristic(IMU_DATA_RX_UUID);
-      metaRxChar              = await service.getCharacteristic(META_RX_UUID);
-      metaTxChar              = await service.getCharacteristic(META_TX_UUID);
-      stateRxChar             = await service.getCharacteristic(STATE_RX_UUID);
-      fileTransferTypeTxChar  = await service.getCharacteristic(FILE_TYPE_TX_UUID);
-      disableMagnetometerTx   = await service.getCharacteristic(DISABLE_MAGNETOMETER_UUID);
-      hasModelRxChar          = await service.getCharacteristic(HAS_MODEL_RX_UUID);
+      console.log("SETUP CONNECT!");
+      numClassesTxChar = await service.getCharacteristic(NUM_CLASSES_UUID);
+      numSamplesTxChar = await service.getCharacteristic(NUM_SAMPLES_UUID);
+      captureDelayTxChar = await service.getCharacteristic(CAPTURE_DELAY_UUID);
+      thresholdTxChar = await service.getCharacteristic(THRESHOLD_UUID);
+      stateTxChar = await service.getCharacteristic(STATE_TX_UUID);
+      inferenceRxChar = await service.getCharacteristic(INFERENCE_RX_UUID);
+      imuDataRxChar = await service.getCharacteristic(IMU_DATA_RX_UUID);
+      metaRxChar = await service.getCharacteristic(META_RX_UUID);
+      metaTxChar = await service.getCharacteristic(META_TX_UUID);
+      stateRxChar = await service.getCharacteristic(STATE_RX_UUID);
+      fileTransferTypeTxChar = await service.getCharacteristic(
+        FILE_TYPE_TX_UUID
+      );
+      disableMagnetometerTx = await service.getCharacteristic(
+        DISABLE_MAGNETOMETER_UUID
+      );
+      hasModelRxChar = await service.getCharacteristic(HAS_MODEL_RX_UUID);
 
       await inferenceRxChar.startNotifications();
       inferenceRxChar.addEventListener(
@@ -547,23 +568,33 @@
       );
 
       await hasModelRxChar.startNotifications();
-      hasModelRxChar.addEventListener("characteristicvaluechanged", handleHasModelChange);
-     updateHasModel();
+      hasModelRxChar.addEventListener(
+        "characteristicvaluechanged",
+        handleHasModelChange
+      );
+      updateHasModel();
 
       await stateRxChar.startNotifications();
-      stateRxChar.addEventListener("characteristicvaluechanged", handleStateChange);
+      stateRxChar.addEventListener(
+        "characteristicvaluechanged",
+        handleStateChange
+      );
 
       isConnected$2 = true;
     },
 
     async disconnect() {
-      await bleManagerApi.setState('IDLE_DISCONNECTED');
+      await bleManagerApi.setState("IDLE_DISCONNECTED");
       await device.gatt.disconnect();
     },
 
-    async transferFile(fileBuffer, fileType){
-      if(FILE_TYPES[fileType] === undefined){
-        throw new Error(`Unknown file type: ${fileType}, valid options are: ${Object.keys(FILE_TYPES).join(', ')}`)
+    async transferFile(fileBuffer, fileType) {
+      if (FILE_TYPES[fileType] === undefined) {
+        throw new Error(
+          `Unknown file type: ${fileType}, valid options are: ${Object.keys(
+            FILE_TYPES
+          ).join(", ")}`
+        );
       }
       if (!isConnected$2) {
         throw new Error("modelBleTransfer not connected");
@@ -572,7 +603,6 @@
       // Set state to file transfer
       const stateArray = Uint8Array.of(STATES.FILE_TRANSFER);
       await stateTxChar.writeValue(stateArray);
-      
 
       const fileTypeArray = Uint8Array.of(FILE_TYPES[fileType]);
       await fileTransferTypeTxChar.writeValue(fileTypeArray);
@@ -610,10 +640,10 @@
       await disableMagnetometerTx.writeValue(disableMagnetometerArray);
 
       // transfer file
-      return bleManagerApi.transferFile(modelBuffer, 'MODEL_FILE')
+      return bleManagerApi.transferFile(modelBuffer, "MODEL_FILE");
     },
 
-    async setDisableMagnetometer(value){
+    async setDisableMagnetometer(value) {
       const disableMagnetometerArray = Uint8Array.of(value);
       await disableMagnetometerTx.writeValue(disableMagnetometerArray);
     },
@@ -622,8 +652,8 @@
       if (STATES[state] === undefined) {
         throw new Error(
           `Invalid state ${state}. Available states are ${Object.keys(
-          STATES
-        ).join(", ")}`
+            STATES
+          ).join(", ")}`
         );
       }
       const stateTxChar = await service.getCharacteristic(STATE_TX_UUID);
@@ -673,7 +703,7 @@
       return eventHandler$1.removeEventListener(...args);
     },
 
-    once(...args){
+    once(...args) {
       return eventHandler$1.once(...args);
     },
 
@@ -794,7 +824,7 @@
       const fileBuffer =
         file instanceof ArrayBuffer ? file : await loadFile(file);
       if (!_isConnected) {
-        console.log('not connecteds');
+        console.log("not connecteds");
         await bleManagerApi.connect();
       }
 
@@ -809,7 +839,7 @@
     }
   }
 
-  function setDisableMagnetometer(value){
+  function setDisableMagnetometer(value) {
     return bleManagerApi.setDisableMagnetometer(value);
   }
 
@@ -864,7 +894,7 @@
     return eventHandler.removeEventListener(eventName, callback);
   }
 
-  var api = /*#__PURE__*/Object.freeze({
+  var api = /*#__PURE__*/ Object.freeze({
     __proto__: null,
     getState: getState,
     writeMetaString: writeMetaString,
@@ -878,7 +908,7 @@
     setDisableMagnetometer: setDisableMagnetometer,
     transferModel: transferModel,
     addEventListener: addEventListener,
-    removeEventListener: removeEventListener
+    removeEventListener: removeEventListener,
   });
 
   /* Copyright 2021 Google LLC
@@ -901,7 +931,6 @@
   };
   let buttonEl;
   let experimentConfig;
-
 
   let isConnected = false;
   async function handleDisconnect() {
@@ -929,7 +958,8 @@
   }
 
   function handleFileTransferProgress(p) {
-    experimentConfig.onTransferProgress && experimentConfig.onTransferProgress(p);
+    experimentConfig.onTransferProgress &&
+      experimentConfig.onTransferProgress(p);
   }
 
   function handleFileTransferCompleted(p) {
@@ -942,10 +972,7 @@
       removeEventListener("disconnect", handleDisconnect);
       removeEventListener("connect", handleConnect);
       removeEventListener("inference", handleInference);
-      removeEventListener(
-        "file-transfer-progress",
-        handleFileTransferProgress
-      );
+      removeEventListener("file-transfer-progress", handleFileTransferProgress);
       removeEventListener(
         "file-transfer-completed",
         handleFileTransferCompleted
@@ -955,41 +982,37 @@
       addEventListener("connect", handleConnect);
       addEventListener("inference", handleInference);
       addEventListener("file-transfer-progress", handleFileTransferProgress);
-      addEventListener(
-        "file-transfer-completed",
-        handleFileTransferCompleted
-      );
+      addEventListener("file-transfer-completed", handleFileTransferCompleted);
 
       await connect();
-      if(experimentConfig.autoTransfer){
+      if (experimentConfig.autoTransfer) {
         await transferModel(experimentConfig);
       }
     } else {
-     
       await disconnect();
     }
   }
 
-  function createConnectButton (containerEl, config) {
+  function createConnectButton(containerEl, config) {
     if (typeof containerEl === "string") {
       let _containerEl = document.querySelector(containerEl);
       if (!_containerEl) {
-        throw new Error(`Failed finding a element with selector ${containerEl}`);
+        throw new Error(
+          `Failed finding a element with selector ${containerEl}`
+        );
       }
       containerEl = _containerEl;
     }
 
-    experimentConfig = {...defaultConfig, ...config};
+    experimentConfig = { ...defaultConfig, ...config };
 
     buttonEl = document.createElement("button");
     buttonEl.classList.add("tinyml-experiment-imu-ble-interface-button");
+    buttonEl.classList.add("btn");
+    buttonEl.classList.add("btn--primary");
     buttonEl.innerText = "Connect";
 
-    buttonEl.addEventListener(
-      "click",
-      () => handleClickConnect(),
-      false
-    );
+    buttonEl.addEventListener("click", () => handleClickConnect(), false);
 
     containerEl.appendChild(buttonEl);
     return buttonEl;
@@ -1013,42 +1036,46 @@
   let button;
   let settings;
 
-  function updateConnected(){
-    if(isConnected$1()){
-      button.removeAttribute('disabled');
+  function updateConnected() {
+    if (isConnected$1()) {
+      button.removeAttribute("disabled");
     } else {
-      button.setAttribute('disabled', true);
+      button.setAttribute("disabled", true);
     }
   }
 
-  async function handleCalibrationClick(){
-    button.innerText = 'Calibrating...';
+  async function handleCalibrationClick() {
+    button.innerText = "Calibrating...";
     settings.onCalibrationBegin && settings.onCalibrationBegin();
     await calibrate();
-    button.innerText = 'Calibrate';
+    button.innerText = "Calibrate";
     settings.onCalibrationComplete && settings.onCalibrationComplete();
   }
 
-  function createCalibrationButton(containerEl, _settings = {}){
+  function createCalibrationButton(containerEl, _settings = {}) {
     if (typeof containerEl === "string") {
       let _containerEl = document.querySelector(containerEl);
       if (!_containerEl) {
-        throw new Error(`Failed finding a element with selector ${containerEl}`);
+        throw new Error(
+          `Failed finding a element with selector ${containerEl}`
+        );
       }
       containerEl = _containerEl;
     }
 
     settings = _settings;
 
-    button = document.createElement('button');
-    button.innerText = 'Calibrate';
-    button.classList.add("tinyml-experiment-imu-ble-interface-calibration-button");
+    button = document.createElement("button");
+    button.innerText = "Calibrate";
+    button.classList.add(
+      "tinyml-experiment-imu-ble-interface-calibration-button"
+    );
 
-    addEventListener('connect', updateConnected);
-    addEventListener('disconnect', updateConnected);
+    addEventListener("connect", updateConnected);
+    addEventListener("disconnect", updateConnected);
     updateConnected();
 
-    button.addEventListener('click',handleCalibrationClick, false);
+    button.addEventListener("click", handleCalibrationClick, false);
 
     containerEl.appendChild(button);
 
@@ -1073,9 +1100,8 @@
   window.tinyMlExperimentBleInterface = {
     api,
     createConnectButton,
-    createCalibrationButton
+    createCalibrationButton,
   };
 
   return api;
-
-}());
+})();
