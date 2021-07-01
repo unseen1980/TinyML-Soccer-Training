@@ -17,7 +17,6 @@ const int numSamples = 25;
 
 int samplesRead = numSamples;
 
-
 // global variables used for TensorFlow Lite (Micro)
 tflite::MicroErrorReporter tflErrorReporter;
 
@@ -26,10 +25,10 @@ tflite::MicroErrorReporter tflErrorReporter;
 // the compiled size of the sketch.
 tflite::AllOpsResolver tflOpsResolver;
 
-const tflite::Model* tflModel = nullptr;
-tflite::MicroInterpreter* tflInterpreter = nullptr;
-TfLiteTensor* tflInputTensor = nullptr;
-TfLiteTensor* tflOutputTensor = nullptr;
+const tflite::Model *tflModel = nullptr;
+tflite::MicroInterpreter *tflInterpreter = nullptr;
+TfLiteTensor *tflInputTensor = nullptr;
+TfLiteTensor *tflOutputTensor = nullptr;
 
 // Create a static memory buffer for TFLM, the size may need to
 // be adjusted based on the model you are using
@@ -37,22 +36,25 @@ constexpr int tensorArenaSize = 8 * 1024;
 byte tensorArena[tensorArenaSize];
 
 // array to map gesture index to a name
-const char* GESTURES[] = {
-    "left", "right", "poke", "twirl", "pluck"
-};
+const char *GESTURES[] = {
+    "left", "right", "poke", "twirl", "kick"};
 
 #define NUM_GESTURES (sizeof(GESTURES) / sizeof(GESTURES[0]))
 
-void setup() {
+void setup()
+{
   pinMode(LED_BUILTIN, OUTPUT);
-        
+
   Serial.begin(9600);
-  while (!Serial);
+  while (!Serial)
+    ;
 
   // initialize the IMU
-  if (!IMU.begin()) {
+  if (!IMU.begin())
+  {
     Serial.println("Failed to initialize IMU!");
-    while (1);
+    while (1)
+      ;
   }
 
   // print out the samples rates of the IMUs
@@ -67,9 +69,11 @@ void setup() {
 
   // get the TFL representation of the model byte array
   tflModel = tflite::GetModel(model);
-  if (tflModel->version() != TFLITE_SCHEMA_VERSION) {
+  if (tflModel->version() != TFLITE_SCHEMA_VERSION)
+  {
     Serial.println("Model schema mismatch!");
-    while (1);
+    while (1)
+      ;
   }
 
   // Create an interpreter to run the model
@@ -81,15 +85,17 @@ void setup() {
   // Get pointers for the model's input and output tensors
   tflInputTensor = tflInterpreter->input(0);
   tflOutputTensor = tflInterpreter->output(0);
-
 }
 
-void loop() {  
+void loop()
+{
   float aX, aY, aZ, gX, gY, gZ;
 
   // wait for significant motion
-  while (samplesRead == numSamples) {
-    if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable()) {
+  while (samplesRead == numSamples)
+  {
+    if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable())
+    {
       // read the acceleration data
       IMU.readAcceleration(aX, aY, aZ);
       IMU.readGyroscope(gX, gY, gZ);
@@ -98,20 +104,23 @@ void loop() {
       float average = fabs(aX / 4.0) + fabs(aY / 4.0) + fabs(aZ / 4.0) + fabs(gX / 2000.0) + fabs(gY / 2000.0) + fabs(gZ / 2000.0);
       average /= 6.;
 
-      // check if it's above the threshold
-      if (aSum >= accelerationThreshold) {
-        // reset the sample read count
-        samplesRead = 0;
-        break;
-      }
+//      // check if it's above the threshold
+//      if (aSum >= accelerationThreshold)
+//      {
+//        // reset the sample read count
+//        samplesRead = 0;
+//        break;
+//      }
     }
   }
 
   // check if the all the required samples have been read since
   // the last time the significant motion was detected
-  while (samplesRead < numSamples) {
+  while (samplesRead < numSamples)
+  {
     // check if new acceleration AND gyroscope data is available
-    if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable()) {
+    if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable())
+    {
       // read the acceleration and gyroscope data
       IMU.readAcceleration(aX, aY, aZ);
       IMU.readGyroscope(gX, gY, gZ);
@@ -127,21 +136,26 @@ void loop() {
 
       samplesRead++;
 
-      if (samplesRead == numSamples) {
+      if (samplesRead == numSamples)
+      {
         // Run inferencing
         TfLiteStatus invokeStatus = tflInterpreter->Invoke();
-        if (invokeStatus != kTfLiteOk) {
+        if (invokeStatus != kTfLiteOk)
+        {
           Serial.println("Invoke failed!");
-          while (1);
+          while (1)
+            ;
           return;
         }
 
         // Loop through the output tensor values from the model
         int max_index = 0;
         float max_value = 0;
-        for (int i = 0; i < NUM_GESTURES; i++) {
+        for (int i = 0; i < NUM_GESTURES; i++)
+        {
           float _value = tflOutputTensor->data.f[i];
-          if(_value > max_value){
+          if (_value > max_value)
+          {
             max_value = _value;
             max_index = i;
           }
@@ -149,10 +163,10 @@ void loop() {
           Serial.print(": ");
           Serial.println(tflOutputTensor->data.f[i], 6);
         }
-        
+
         Serial.print("Winner: ");
         Serial.print(GESTURES[max_index]);
-        
+
         Serial.println();
         delay(30);
       }

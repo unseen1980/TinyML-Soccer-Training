@@ -27,22 +27,18 @@ export default function (p5) {
   let d = 0;
   let wave_text = 10;
   let sc = 0;
-  let leftSound, rightSound, poke, pluck, twirl;
+  let kick, up, back, pass, drill;
   let drums = [];
   let gesture;
 
-  const GESTURES = ["left", "right", "poke", "twirl", "pluck"];
+  const GESTURES = ["kick", "up", "back", "pass", "drill"];
 
   p5.preload = function () {
-    leftSound = p5.loadSound("./sounds/left.wav");
-    rightSound = p5.loadSound("./sounds/right.wav");
-    twirl = p5.loadSound("./sounds/twirl.wav");
-    poke = p5.loadSound("./sounds/poke.wav");
-    pluck = p5.loadSound("./sounds/pluck.wav");
-    drums[0] = p5.loadSound("./sounds/D1.wav");
-    drums[1] = p5.loadSound("./sounds/D2.wav");
-    drums[2] = p5.loadSound("./sounds/D3.wav");
-    drums[3] = p5.loadSound("./sounds/D4.wav");
+    kick = p5.loadSound("./sounds/left.wav");
+    up = p5.loadSound("./sounds/right.wav");
+    back = p5.loadSound("./sounds/twirl.wav");
+    pass = p5.loadSound("./sounds/poke.wav");
+    drill = p5.loadSound("./sounds/pluck.wav");
   };
 
   p5.setup = function () {
@@ -68,7 +64,7 @@ export default function (p5) {
   };
 
   //LEFT KEY
-  function left_gesture() {
+  function kick_gesture() {
     r = 23;
     g = 114;
     b = 250;
@@ -83,7 +79,7 @@ export default function (p5) {
     p5.ellipse(x, y + 300, 300, 300);
     p5.pop();
 
-    leftSound.play();
+    kick.play();
     p5.push();
     p5.textSize(16);
     p5.fill(255);
@@ -94,7 +90,7 @@ export default function (p5) {
   }
 
   //RIGHT KEY
-  function right_gesture() {
+  function up_gesture() {
     r = 224;
     g = 155;
     b = 11;
@@ -110,7 +106,7 @@ export default function (p5) {
     p5.ellipse(x + 150, y, 100, 100);
     p5.ellipse(x + 300, y, 100, 100);
     p5.pop();
-    rightSound.play();
+    up.play();
 
     p5.push();
     p5.textSize(16);
@@ -122,7 +118,7 @@ export default function (p5) {
   }
 
   //DOWN KEY
-  function poke_gesture() {
+  function back_gesture() {
     r = 195;
     g = 184;
     b = 245;
@@ -153,7 +149,7 @@ export default function (p5) {
     p5.fill(134, 224, 163);
     p5.ellipse(x, y, 200, 200);
     p5.pop();
-    poke.play();
+    back.play();
 
     p5.push();
     p5.textSize(16);
@@ -165,7 +161,7 @@ export default function (p5) {
   }
 
   //A KEY
-  function twirl_gesture() {
+  function pass_gesture() {
     r = 134;
     g = 224;
     b = 163;
@@ -197,7 +193,7 @@ export default function (p5) {
     p5.pop();
   }
   //UP KEY
-  function pluck_gesture() {
+  function drill_gesture() {
     r = 250;
     g = 75;
     b = 67;
@@ -216,7 +212,7 @@ export default function (p5) {
     p5.ellipse(x - x / 2, y - y / 4, 200);
     p5.ellipse(x + x / 2, y + y / 4, 200);
     p5.pop();
-    pluck.play();
+    kick.play();
 
     if (drums[d].isPlaying()) {
       drums[d].stop();
@@ -237,56 +233,29 @@ export default function (p5) {
     p5.pop();
   }
 
-  //Try application with keyboard
-  p5.keyPressed = function () {
-    //RIGHT
-    if (p5.keyCode == "39") {
-      right_gesture();
-    }
-    //LEFT
-    else if (p5.keyCode == "37") {
-      left_gesture();
-    }
-
-    //UP - PLUCK
-    else if (p5.keyCode == "38") {
-      pluck_gesture();
-    }
-
-    //DOWN -- poke
-    else if (p5.keyCode == "40") {
-      poke_gesture();
-    }
-
-    //A -- TWIRL
-    else if (p5.keyCode == "65") {
-      twirl_gesture();
-    }
-  };
-
   handleGesture = function (index) {
     switch (index) {
       case 0:
-        gesture = "left";
-        left_gesture();
+        gesture = "kick";
+        kick_gesture();
 
         break;
       case 1:
-        gesture = "right";
-        right_gesture();
+        gesture = "up";
+        up_gesture();
 
         break;
       case 2:
-        gesture = "poke";
-        poke_gesture();
+        gesture = "back";
+        back_gesture();
         break;
       case 3:
-        gesture = "twirl";
-        twirl_gesture();
+        gesture = "pass";
+        pass_gesture();
         break;
       case 4:
-        gesture = "pluck";
-        pluck_gesture();
+        gesture = "drill";
+        drill_gesture();
 
         break;
       default:

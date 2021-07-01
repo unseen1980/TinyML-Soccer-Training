@@ -24,7 +24,7 @@
 // let drums = [];
 let gesture;
 
-const GESTURES = ["left", "right", "poke", "twirl", "pluck"];
+const GESTURES = ["kick", "up", "back", "pass", "drill"];
 
 // function preload() {
 //   leftSound = loadSound("./sounds/left.wav");
@@ -227,11 +227,11 @@ function setup() {
 // }
 
 let count = {
-  left: 0,
-  right: 0,
-  poke: 0,
-  twirl: 0,
-  pluck: 0,
+  kick: 0,
+  up: 0,
+  back: 0,
+  pass: 0,
+  drill: 0,
 };
 
 let updateCount = (g) => {
@@ -245,33 +245,33 @@ function onInferenceSketch(i) {
   userStartAudio();
   switch (i) {
     case 0:
-      gesture = "left";
+      gesture = "kick";
       console.log("Gesture: ", gesture);
       updateCount(gesture);
       // left_gesture(count[gesture]);
 
       break;
     case 1:
-      gesture = "right";
+      gesture = "up";
       console.log("Gesture: ", gesture);
       updateCount(gesture);
       // right_gesture(count[gesture]);
 
       break;
     case 2:
-      gesture = "poke";
+      gesture = "back";
       console.log("Gesture: ", gesture);
       updateCount(gesture);
       // poke_gesture(count[gesture]);
       break;
     case 3:
-      gesture = "twirl";
+      gesture = "pass";
       console.log("Gesture: ", gesture);
       updateCount(gesture);
       // twirl_gesture(count[gesture]);
       break;
     case 4:
-      gesture = "pluck";
+      gesture = "drill";
       console.log("Gesture: ", gesture);
       updateCount(gesture);
       // pluck_gesture(count[gesture]);
