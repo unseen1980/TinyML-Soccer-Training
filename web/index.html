@@ -87,7 +87,7 @@
       <div class="admin">
         <header class="admin__header">
           <a href="#" class="logo">
-            <h2>Kinsealy United FC</h2>
+            <h2>Soccer Training</h2>
           </a>
           <div class="toolbar">
             <!-- <button class="btn btn--primary">Add New Plumbus</button> -->
@@ -98,9 +98,9 @@
             >
               <div id="connectButtonContainer"></div>
               <div id="myProgress" style="display: flex; align-items: center">
-                <p id="progress-text" style="margin: 20px; width: 100%">
+                <!-- <p id="progress-text" style="margin: 20px; width: 100%">
                   Sending Tensorflow model via BLE
-                </p>
+                </p> -->
                 <div id="myBar"></div>
               </div>
             </div>
@@ -111,9 +111,6 @@
           <ul class="menu">
             <li class="menu__item">
               <a class="menu__link" href="#">Stats</a>
-            </li>
-            <li class="menu__item">
-              <a class="menu__link" href="#">How it works</a>
             </li>
             <li class="menu__item">
               <a class="menu__link" href="#">About</a>
@@ -130,17 +127,16 @@
               <div class="card"><strong>81</strong> Passes</div>
             </div>
             <div class="dashboard__item dashboard__item--full">
-              <div
-                class="card"
-                id="gesturesCounter"
-                style="font-size: 32px"
-              ></div>
+              <div class="card">
+                <h5>Current Training Graph</h5>
+                <div id="gesturesCounter" style="font-size: 32px"></div>
+              </div>
             </div>
             <div class="dashboard__item dashboard__item--col">
-              <div class="card">Kicks</div>
+              <div class="card">Kick</div>
             </div>
             <div class="dashboard__item dashboard__item--col">
-              <div class="card">Up block</div>
+              <div class="card">Up Block</div>
             </div>
             <div class="dashboard__item dashboard__item--col">
               <div class="card">Back</div>
@@ -152,12 +148,12 @@
               <div class="card">Drill</div>
             </div>
           </div>
-          <p>
+          <!-- <p>
             read more about this in
             <a href="https://mxb.at/blog/css-grid-admin-dashboard/"
               >this blogpost</a
             >.
-          </p>
+          </p> -->
         </main>
         <footer class="admin__footer">
           <span> &copy; 2021 Kinsealy United F.C. </span>
