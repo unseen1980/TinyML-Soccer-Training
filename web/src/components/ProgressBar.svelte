@@ -12,7 +12,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 ========================================================================-->
-
 <script>
   import { transferProgress } from "../store";
   export let label = "progress";
@@ -50,24 +49,13 @@ limitations under the License.
   .container {
     display: flex;
     flex-direction: row;
-    img {
-      width: 50px;
-    }
-  }
-  .progress-bar {
-    position: absolute;
-    top: 9px;
-    left: 0;
-    bottom: 18px;
-    z-index: 2;
-    background: #eee;
   }
 
   svg {
     margin: 5px 10px;
   }
 
-  .label{
+  .label {
     margin: 0;
     padding: 0;
     font-style: italic;

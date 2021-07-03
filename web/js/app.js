@@ -2,6 +2,8 @@
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -22,47 +24,160 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-var e = React.createElement;
+var Chart = /*#__PURE__*/function (_React$Component) {
+  _inherits(Chart, _React$Component);
 
-var LikeButton = /*#__PURE__*/function (_React$Component) {
-  _inherits(LikeButton, _React$Component);
+  var _super = _createSuper(Chart);
 
-  var _super = _createSuper(LikeButton);
-
-  function LikeButton(props) {
+  function Chart(props) {
     var _this;
 
-    _classCallCheck(this, LikeButton);
+    _classCallCheck(this, Chart);
 
     _this = _super.call(this, props);
     _this.state = {
-      liked: false
+      count: _this.props.data
+    };
+    _this.instance;
+    _this.options = {
+      chart: {
+        type: "column"
+      },
+      title: {
+        text: "Performance"
+      },
+      subtitle: {
+        text: "Sunday Match"
+      },
+      xAxis: {
+        categories: ["Kick", "Up Block", "Back", "Pass", "Drill"],
+        crosshair: true
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: "Number of times"
+        }
+      },
+      tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+        footerFormat: "</table>",
+        shared: true,
+        useHTML: true
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 0
+        }
+      },
+      series: [{
+        name: "Alex",
+        data: _this.state.count,
+        animation: false
+      }]
     };
     return _this;
   }
 
-  _createClass(LikeButton, [{
+  _createClass(Chart, [{
+    key: "componentDidMount",
+    value: function componentDidMount(prevProps) {
+      this.instance = Highcharts.chart("container", this.options);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (prevProps.data !== this.props.data) {
+        this.setState({
+          count: this.props.data
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
-
-      if (this.state.liked) {
-        return "You liked this.";
-      }
-
-      return /*#__PURE__*/React.createElement("button", {
-        className: "btn btn--primary",
-        onClick: function onClick() {
-          return _this2.setState({
-            liked: true
-          });
-        }
-      }, "Save stats");
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+        id: "container"
+      }));
     }
   }]);
 
-  return LikeButton;
+  return Chart;
 }(React.Component);
 
-var domContainer = document.querySelector("#reactBtn");
-ReactDOM.render(e(LikeButton), domContainer);
+var AdminPanel = /*#__PURE__*/function (_React$Component2) {
+  _inherits(AdminPanel, _React$Component2);
+
+  var _super2 = _createSuper(AdminPanel);
+
+  function AdminPanel(props) {
+    var _this2;
+
+    _classCallCheck(this, AdminPanel);
+
+    _this2 = _super2.call(this, props);
+
+    _defineProperty(_assertThisInitialized(_this2), "mySubscriber", function (msg, data) {
+      _this2.setState({
+        count: data
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_this2), "token", PubSub.subscribe("gestures", _this2.mySubscriber));
+
+    _this2.state = {
+      count: [0, 0, 0, 0, 0],
+      kicks: 0,
+      upBlocks: 0,
+      backPasses: 0,
+      passes: 0,
+      drills: 0
+    };
+    _this2.token = null;
+    return _this2;
+  }
+
+  _createClass(AdminPanel, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, "Dashboard"), /*#__PURE__*/React.createElement("div", {
+        className: "dashboard"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "dashboard__item dashboard__item--full"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card"
+      }, /*#__PURE__*/React.createElement("figure", {
+        className: "highcharts-figure"
+      }, /*#__PURE__*/React.createElement(Chart, {
+        data: Object.values(this.state.count),
+        key: Object.values(this.state.count)
+      })))), /*#__PURE__*/React.createElement("div", {
+        className: "dashboard__item dashboard__item--col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card text-center "
+      }, /*#__PURE__*/React.createElement("span", null, "Kicks"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), this.state.count['kick'])), /*#__PURE__*/React.createElement("div", {
+        className: "dashboard__item dashboard__item--col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card text-center "
+      }, /*#__PURE__*/React.createElement("span", null, "Up Blocks"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), this.state.count['up'])), /*#__PURE__*/React.createElement("div", {
+        className: "dashboard__item dashboard__item--col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card text-center "
+      }, /*#__PURE__*/React.createElement("span", null, "Back passes"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), this.state.count['back'])), /*#__PURE__*/React.createElement("div", {
+        className: "dashboard__item dashboard__item--col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card text-center "
+      }, /*#__PURE__*/React.createElement("span", null, "Passes"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), this.state.count['pass'])), /*#__PURE__*/React.createElement("div", {
+        className: "dashboard__item dashboard__item--col"
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "card text-center "
+      }, /*#__PURE__*/React.createElement("span", null, "Drills"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), this.state.count['drill']))));
+    }
+  }]);
+
+  return AdminPanel;
+}(React.Component);
+
+ReactDOM.render( /*#__PURE__*/React.createElement(AdminPanel, null), document.getElementById("adminMain"));
