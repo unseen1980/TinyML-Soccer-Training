@@ -6,9 +6,9 @@
 
 If we don't have data then we don't know what to improve. So one way to improve my soccer skills is to see what moves I am not using much and try to work more on those.
 
-With the help of [Tiny Motion Trainer](https://experiments.withgoogle.com/tiny-motion-trainer "Tiny Motion Trainer") I trained a model for kicks, up blocks, back passes, normal passes and drill.
+With the help of [Tiny Motion Trainer](https://experiments.withgoogle.com/tiny-motion-trainer "Tiny Motion Trainer") I trained a model for kicks, up blocks, back passes, normal passes and drills.
 
-Then I am uploading with with BLE the model to the Arduino microcontroller. After successfully pairing the Chrome browser to the microcontroller each moves that get detected is sent to a small ReactJS application. Cards and a Column chart shows my progress. On my ToDo list is to save these results on a database for better comparison.
+Then I am uploading with BLE the model to the Arduino microcontroller. After successfully pairing the Chrome browser to the microcontroller each move that get detected is sent to a small ReactJS application. Cards and a Column chart shows my progress in real time. On my ToDo list is to save these results on a database for better comparison.
 
 ### Install and Usage
 
