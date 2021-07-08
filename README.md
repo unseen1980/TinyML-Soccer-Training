@@ -33,5 +33,7 @@ Of course the code quality is bad. It is written like I am developing for a 1 ho
 
 ### Youtube
 
+Project presentation: https://www.youtube.com/watch?v=rRKShsirETo
+
 My channel is https://www.youtube.com/channel/UCpw2pE59pCl3epEksp1ycEg
 Please subscribe if you want to support me 👍
