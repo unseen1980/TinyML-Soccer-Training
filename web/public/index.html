@@ -18,42 +18,47 @@ limitations under the License.
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
     <script nonce="347fj326c">
-      if(!location.href.match(/.*\/$/)){
-        location.href += '/';
+      if (!location.href.match(/.*\/$/)) {
+        location.href += "/";
       }
     </script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KWBMPFFBQT"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-KWBMPFFBQT"
+    ></script>
     <script nonce="3958daj3m">
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-        gtag('config', 'G-KWBMPFFBQT', { anonymize_ip: true, referrer: document.referrer.split('?')[0] });
+      gtag("config", "G-KWBMPFFBQT", {
+        anonymize_ip: true,
+        referrer: document.referrer.split("?")[0],
+      });
     </script>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
- 
-    <meta name="twitter:title" content="FUI - Finger User Interface">
-    <meta property="og:image" content="https://experiments.withgoogle.com/finger-user-interface/view/images/FUI_16x9.gif">
-    <meta property="og:title" content="FUI" />
-    <meta property="og:description" content="Finger User Interface or FUI ( pronounced Foo-ey ) lets you control devices with the wave of a finger. Using an Arduino, an IMU sensor, and TensorFlow we customized a machine learning model to recognize 5 gestures that control the animation and sound on a webpage. This project is a part of a collection of experiments that shows the possibilities of building with TensorFlow Lite for Microcontrollers." />  
-    
-    <title>FUI</title>
-    
+
+    <meta name="twitter:title" content="soccer-moves-tracker" />
+    <meta
+      property="og:image"
+      content="https://experiments.withgoogle.com/finger-user-interface/view/images/FUI_16x9.gif"
+    />
+    <meta property="og:title" content="soccer-moves-tracker" />
+    <meta property="og:description" content="Soccer moves tracker" />
+
+    <title>Soccer moves tracker</title>
+
     <link rel="stylesheet" href="./build/bundle.css" />
 
     <script defer src="./build/bundle.js?cache-bust=4"></script>
-
-
   </head>
-
 
   <body>
     <script

@@ -12,7 +12,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 ========================================================================-->
-
 <script>
   import { onMount } from "svelte";
 
@@ -92,12 +91,7 @@ limitations under the License.
           ? "auto"
           : `${topSectionElHeight + stickyHeight}vh`
       }`}
-    >
-      <div class="sticky" bind:this={stickyEl}>
-        <h1>FUI<span class="sub-title">[Finger User Interface]</span></h1>
-        <h2>Control your devices with the wave of a finger.</h2>
-      </div>
-    </header>
+    />
     <div class="scroll-container">
       <section bind:this={topSectionEl}>
         <div class="row">
@@ -223,13 +217,12 @@ limitations under the License.
     align-items: flex-start;
   }
 
-  .instruction-gifs{
+  .instruction-gifs {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin: 49px 0;
-     
-    }
+  }
 
   @media screen and (min-width: 905px) {
     .container {
@@ -237,7 +230,7 @@ limitations under the License.
       flex-direction: row;
     }
 
-    .instruction-gifs{
+    .instruction-gifs {
       margin: 49px -23px 47px 7px;
     }
 
@@ -254,8 +247,6 @@ limitations under the License.
     .sticky {
       max-width: 448px;
     }
-
-  
   }
 
   .scroll-container {
@@ -298,7 +289,7 @@ limitations under the License.
     margin-left: -5px;
   }
 
-  h2{
+  h2 {
     margin-top: 2.9em;
   }
 </style>
